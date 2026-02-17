@@ -8,11 +8,23 @@ const navItems = [
   { label: "Reports", icon: BarChart3, href: "/admin/reports" },
 ];
 
-export default function Sidebar() {
+interface SidebarProps {
+  variant?: "desktop" | "mobile";
+  onNavigate?: () => void;
+}
+
+export default function Sidebar({
+  variant = "desktop",
+  onNavigate,
+}: SidebarProps) {
   const location = useLocation();
+  const containerClassName =
+    variant === "mobile"
+      ? "flex flex-col w-72 bg-gradient-to-b from-indigo-900 to-indigo-950 text-white h-full"
+      : "hidden lg:flex lg:flex-col lg:w-64 bg-gradient-to-b from-indigo-900 to-indigo-950 text-white h-screen sticky top-0";
 
   return (
-    <aside className="hidden lg:flex lg:flex-col lg:w-64 bg-gradient-to-b from-indigo-900 to-indigo-950 text-white h-screen sticky top-0">
+    <aside className={containerClassName}>
       <div className="flex items-center gap-2 px-6 py-6">
         <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center">
           <span className="font-bold text-white">A</span>
@@ -34,6 +46,7 @@ export default function Sidebar() {
                       ? "bg-white/10 text-white"
                       : "text-indigo-100 hover:bg-white/10 hover:text-white"
                   }`}
+                  onClick={onNavigate}
                 >
                   <Icon className="h-4 w-4" />
                   {item.label}
@@ -45,7 +58,10 @@ export default function Sidebar() {
       </nav>
 
       <div className="px-4 pb-6">
-        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-indigo-100 hover:bg-white/10 hover:text-white transition-colors">
+        <button
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-indigo-100 hover:bg-white/10 hover:text-white transition-colors"
+          onClick={onNavigate}
+        >
           <LogOut className="h-4 w-4" />
           Logout
         </button>

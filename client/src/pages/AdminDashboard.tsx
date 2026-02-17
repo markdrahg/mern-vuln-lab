@@ -20,7 +20,7 @@ export default function AdminDashboard() {
     <AdminLayout title="Admin Dashboard">
       <div className="space-y-6">
         {/* Stat Cards */}
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 xl:grid-cols-3">
           {adminStats.map((stat) => (
             <StatCard
               key={stat.id}
@@ -33,7 +33,7 @@ export default function AdminDashboard() {
 
         {/* Recent Users */}
         <section className="bg-white rounded-xl border border-gray-200 shadow-sm">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+          <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-100">
             <h2 className="text-lg font-semibold text-gray-900">
               Recent Users
             </h2>
@@ -45,10 +45,14 @@ export default function AdminDashboard() {
             <table className="w-full text-sm">
               <thead className="text-left text-gray-500">
                 <tr className="border-b border-gray-100">
-                  <th className="px-6 py-3 font-medium">Name</th>
-                  <th className="px-6 py-3 font-medium">Email</th>
-                  <th className="px-6 py-3 font-medium">Role</th>
-                  <th className="px-6 py-3 font-medium">Joined</th>
+                  <th className="px-4 sm:px-6 py-3 font-medium">Name</th>
+                  <th className="px-4 sm:px-6 py-3 font-medium hidden md:table-cell">
+                    Email
+                  </th>
+                  <th className="px-4 sm:px-6 py-3 font-medium">Role</th>
+                  <th className="px-4 sm:px-6 py-3 font-medium hidden lg:table-cell">
+                    Joined
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -57,7 +61,7 @@ export default function AdminDashboard() {
                     key={user.id}
                     className="border-b border-gray-100 last:border-0"
                   >
-                    <td className="px-6 py-4 font-medium text-gray-900">
+                    <td className="px-4 sm:px-6 py-4 font-medium text-gray-900">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-semibold">
                           {user.name
@@ -68,13 +72,17 @@ export default function AdminDashboard() {
                         {user.name}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-gray-600">{user.email}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 sm:px-6 py-4 text-gray-600 hidden md:table-cell">
+                      {user.email}
+                    </td>
+                    <td className="px-4 sm:px-6 py-4">
                       <span className="px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-medium">
                         {user.role}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-gray-600">{user.joined}</td>
+                    <td className="px-4 sm:px-6 py-4 text-gray-600 hidden lg:table-cell">
+                      {user.joined}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -84,7 +92,7 @@ export default function AdminDashboard() {
 
         {/* Recent Shipments */}
         <section className="bg-white rounded-xl border border-gray-200 shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-4 px-6 py-4 border-b border-gray-100">
+          <div className="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-6 py-4 border-b border-gray-100">
             <h2 className="text-lg font-semibold text-gray-900">
               Recent Shipments
             </h2>
@@ -104,12 +112,18 @@ export default function AdminDashboard() {
             <table className="w-full text-sm">
               <thead className="text-left text-gray-500">
                 <tr className="border-b border-gray-100">
-                  <th className="px-6 py-3 font-medium">Tracking Number</th>
-                  <th className="px-6 py-3 font-medium">Customer</th>
-                  <th className="px-6 py-3 font-medium">Status</th>
-                  <th className="px-6 py-3 font-medium">Origin</th>
-                  <th className="px-6 py-3 font-medium">Destination</th>
-                  <th className="px-6 py-3 font-medium">Action</th>
+                  <th className="px-4 sm:px-6 py-3 font-medium">
+                    Tracking Number
+                  </th>
+                  <th className="px-4 sm:px-6 py-3 font-medium">Customer</th>
+                  <th className="px-4 sm:px-6 py-3 font-medium">Status</th>
+                  <th className="px-4 sm:px-6 py-3 font-medium hidden md:table-cell">
+                    Origin
+                  </th>
+                  <th className="px-4 sm:px-6 py-3 font-medium hidden lg:table-cell">
+                    Destination
+                  </th>
+                  <th className="px-4 sm:px-6 py-3 font-medium">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -118,13 +132,13 @@ export default function AdminDashboard() {
                     key={shipment.id}
                     className="border-b border-gray-100 last:border-0"
                   >
-                    <td className="px-6 py-4 font-medium text-gray-900">
+                    <td className="px-4 sm:px-6 py-4 font-medium text-gray-900">
                       {shipment.trackingNumber}
                     </td>
-                    <td className="px-6 py-4 text-gray-600">
+                    <td className="px-4 sm:px-6 py-4 text-gray-600">
                       {shipment.customer}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 sm:px-6 py-4">
                       <span
                         className={`px-2.5 py-1 rounded-full text-xs font-medium ${
                           statusStyles[shipment.status] ??
@@ -134,13 +148,13 @@ export default function AdminDashboard() {
                         {shipment.status.replace(/_/g, " ")}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-gray-600">
+                    <td className="px-4 sm:px-6 py-4 text-gray-600 hidden md:table-cell">
                       {shipment.origin}
                     </td>
-                    <td className="px-6 py-4 text-gray-600">
+                    <td className="px-4 sm:px-6 py-4 text-gray-600 hidden lg:table-cell">
                       {shipment.destination}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 sm:px-6 py-4">
                       <button className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
                         View
                       </button>
