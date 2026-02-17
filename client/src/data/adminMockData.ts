@@ -46,6 +46,11 @@ export interface AdminReportRouteRow {
   avgTransit: string;
 }
 
+export interface AdminReportSeriesPoint {
+  label: string;
+  value: number;
+}
+
 export interface AdminReportActivityRow {
   id: string;
   title: string;
@@ -326,39 +331,57 @@ export const reportMetrics: AdminReportMetric[] = [
 export const reportRoutes: AdminReportRouteRow[] = [
   {
     id: "r-01",
-    route: "Los Angeles, CA  Phoenix, AZ",
+    route: "Los Angeles, CA -> Phoenix, AZ",
     volume: 184,
     onTimeRate: "96%",
     avgTransit: "1.8 days",
   },
   {
     id: "r-02",
-    route: "Dallas, TX  Houston, TX",
+    route: "Dallas, TX -> Houston, TX",
     volume: 162,
     onTimeRate: "92%",
     avgTransit: "1.2 days",
   },
   {
     id: "r-03",
-    route: "Chicago, IL  St. Louis, MO",
+    route: "Chicago, IL -> St. Louis, MO",
     volume: 141,
     onTimeRate: "90%",
     avgTransit: "1.6 days",
   },
   {
     id: "r-04",
-    route: "Seattle, WA  Portland, OR",
+    route: "Seattle, WA -> Portland, OR",
     volume: 128,
     onTimeRate: "97%",
     avgTransit: "1.1 days",
   },
   {
     id: "r-05",
-    route: "New York, NY  Boston, MA",
+    route: "New York, NY -> Boston, MA",
     volume: 117,
     onTimeRate: "93%",
     avgTransit: "1.7 days",
   },
+];
+
+export const reportWeeklyVolume: AdminReportSeriesPoint[] = [
+  { label: "Mon", value: 120 },
+  { label: "Tue", value: 148 },
+  { label: "Wed", value: 132 },
+  { label: "Thu", value: 168 },
+  { label: "Fri", value: 190 },
+  { label: "Sat", value: 110 },
+  { label: "Sun", value: 96 },
+];
+
+export const reportOnTimeTrend: AdminReportSeriesPoint[] = [
+  { label: "Wk 1", value: 91 },
+  { label: "Wk 2", value: 92 },
+  { label: "Wk 3", value: 93 },
+  { label: "Wk 4", value: 94 },
+  { label: "Wk 5", value: 95 },
 ];
 
 export const reportActivity: AdminReportActivityRow[] = [

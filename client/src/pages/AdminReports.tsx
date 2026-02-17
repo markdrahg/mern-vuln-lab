@@ -2,7 +2,9 @@ import AdminLayout from "../layouts/AdminLayout";
 import {
   reportActivity,
   reportMetrics,
+  reportOnTimeTrend,
   reportRoutes,
+  reportWeeklyVolume,
 } from "../data/adminMockData";
 
 const trendStyles: Record<string, string> = {
@@ -41,6 +43,67 @@ export default function AdminReports() {
               </div>
             </div>
           ))}
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-2">
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Weekly Shipment Volume
+                </h2>
+                <p className="text-sm text-gray-500 mt-1">
+                  Last 7 days across all lanes.
+                </p>
+              </div>
+              <span className="text-sm text-gray-400">Shipments</span>
+            </div>
+            <div className="mt-6 flex items-end gap-3 h-40">
+              {reportWeeklyVolume.map((point) => (
+                <div
+                  key={point.label}
+                  className="flex flex-col items-center gap-2 flex-1"
+                >
+                  <div
+                    className="w-full bg-indigo-500/80 rounded-md"
+                    style={{ height: `${Math.max(12, point.value * 0.8)}px` }}
+                  />
+                  <span className="text-xs text-gray-500">{point.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  On-Time Trend
+                </h2>
+                <p className="text-sm text-gray-500 mt-1">
+                  Rolling 5-week performance.
+                </p>
+              </div>
+              <span className="text-sm text-gray-400">Percent</span>
+            </div>
+            <div className="mt-6 grid grid-cols-5 gap-3 items-end h-40">
+              {reportOnTimeTrend.map((point) => (
+                <div
+                  key={point.label}
+                  className="flex flex-col items-center gap-2"
+                >
+                  <div
+                    className="w-full bg-emerald-500/80 rounded-md"
+                    style={{ height: `${Math.max(12, point.value)}px` }}
+                  />
+                  <span className="text-xs text-gray-500">{point.label}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 text-xs text-gray-500">
+              Current: 95% on-time deliveries
+            </div>
+          </div>
         </section>
 
         <section className="grid gap-6 lg:grid-cols-2">
