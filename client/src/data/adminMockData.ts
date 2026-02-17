@@ -30,6 +30,30 @@ export interface AdminShipmentRow {
   destination: string;
 }
 
+export interface AdminReportMetric {
+  id: string;
+  label: string;
+  value: string;
+  delta: string;
+  trend: "up" | "down";
+}
+
+export interface AdminReportRouteRow {
+  id: string;
+  route: string;
+  volume: number;
+  onTimeRate: string;
+  avgTransit: string;
+}
+
+export interface AdminReportActivityRow {
+  id: string;
+  title: string;
+  description: string;
+  time: string;
+  status: "Success" | "Warning" | "Info";
+}
+
 export const adminStats: AdminStat[] = [
   {
     id: "total-users",
@@ -198,5 +222,172 @@ export const recentShipments: AdminShipmentRow[] = [
     status: "in_transit",
     origin: "Dallas, TX",
     destination: "Houston, TX",
+  },
+];
+
+export const adminShipments: AdminShipmentRow[] = [
+  {
+    id: "s-101",
+    trackingNumber: "ACM-2026-004610",
+    customer: "Jordan Lee",
+    status: "in_transit",
+    origin: "New York, NY",
+    destination: "Boston, MA",
+  },
+  {
+    id: "s-102",
+    trackingNumber: "ACM-2026-004609",
+    customer: "Priya Singh",
+    status: "delivered",
+    origin: "Los Angeles, CA",
+    destination: "Phoenix, AZ",
+  },
+  {
+    id: "s-103",
+    trackingNumber: "ACM-2026-004608",
+    customer: "Carlos Mendez",
+    status: "delayed",
+    origin: "Houston, TX",
+    destination: "Miami, FL",
+  },
+  {
+    id: "s-104",
+    trackingNumber: "ACM-2026-004607",
+    customer: "Ava Patel",
+    status: "out_for_delivery",
+    origin: "Seattle, WA",
+    destination: "Portland, OR",
+  },
+  {
+    id: "s-105",
+    trackingNumber: "ACM-2026-004606",
+    customer: "Noah Carter",
+    status: "pending",
+    origin: "Chicago, IL",
+    destination: "St. Louis, MO",
+  },
+  {
+    id: "s-106",
+    trackingNumber: "ACM-2026-004605",
+    customer: "Emily Chen",
+    status: "in_transit",
+    origin: "Denver, CO",
+    destination: "Salt Lake City, UT",
+  },
+  {
+    id: "s-107",
+    trackingNumber: "ACM-2026-004604",
+    customer: "Marcus Hill",
+    status: "delivered",
+    origin: "Dallas, TX",
+    destination: "Austin, TX",
+  },
+  {
+    id: "s-108",
+    trackingNumber: "ACM-2026-004603",
+    customer: "Sara Gomez",
+    status: "cancelled",
+    origin: "San Diego, CA",
+    destination: "Las Vegas, NV",
+  },
+];
+
+export const reportMetrics: AdminReportMetric[] = [
+  {
+    id: "on-time",
+    label: "On-Time Delivery",
+    value: "94.2%",
+    delta: "+1.8% vs last month",
+    trend: "up",
+  },
+  {
+    id: "avg-transit",
+    label: "Avg Transit Time",
+    value: "2.6 days",
+    delta: "-0.3 days",
+    trend: "down",
+  },
+  {
+    id: "exceptions",
+    label: "Exception Rate",
+    value: "3.4%",
+    delta: "-0.6% vs last month",
+    trend: "down",
+  },
+  {
+    id: "utilization",
+    label: "Fleet Utilization",
+    value: "81%",
+    delta: "+4% vs last month",
+    trend: "up",
+  },
+];
+
+export const reportRoutes: AdminReportRouteRow[] = [
+  {
+    id: "r-01",
+    route: "Los Angeles, CA  Phoenix, AZ",
+    volume: 184,
+    onTimeRate: "96%",
+    avgTransit: "1.8 days",
+  },
+  {
+    id: "r-02",
+    route: "Dallas, TX  Houston, TX",
+    volume: 162,
+    onTimeRate: "92%",
+    avgTransit: "1.2 days",
+  },
+  {
+    id: "r-03",
+    route: "Chicago, IL  St. Louis, MO",
+    volume: 141,
+    onTimeRate: "90%",
+    avgTransit: "1.6 days",
+  },
+  {
+    id: "r-04",
+    route: "Seattle, WA  Portland, OR",
+    volume: 128,
+    onTimeRate: "97%",
+    avgTransit: "1.1 days",
+  },
+  {
+    id: "r-05",
+    route: "New York, NY  Boston, MA",
+    volume: 117,
+    onTimeRate: "93%",
+    avgTransit: "1.7 days",
+  },
+];
+
+export const reportActivity: AdminReportActivityRow[] = [
+  {
+    id: "a-01",
+    title: "Carrier delay alert",
+    description: "Midwest corridor experiencing 4-6 hour delays.",
+    time: "Today, 09:12",
+    status: "Warning",
+  },
+  {
+    id: "a-02",
+    title: "Weekly KPI export",
+    description: "Performance report delivered to finance team.",
+    time: "Yesterday, 16:40",
+    status: "Success",
+  },
+  {
+    id: "a-03",
+    title: "On-time milestone",
+    description: "On-time delivery exceeded 94% for Q1.",
+    time: "Yesterday, 11:05",
+    status: "Success",
+  },
+  {
+    id: "a-04",
+    title: "Route optimization run",
+    description: "Suggested 12 lane adjustments for next week.",
+    time: "Feb 15, 14:22",
+    status: "Info",
   },
 ];
