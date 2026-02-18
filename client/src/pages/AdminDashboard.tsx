@@ -1,10 +1,10 @@
+import { useEffect, useState } from "react";
 import AdminLayout from "../layouts/AdminLayout";
 import StatCard from "../components/StatCard";
-import {
-  adminStats,
-  recentShipments,
-  recentUsers,
-} from "../data/adminMockData";
+import { shipmentService, type Shipment } from "../services/shipmentService";
+import { adminService, type DashboardMetrics } from "../services/adminService";
+import { SkeletonLoader } from "../components/LoadingSpinner";
+import { toastService } from "../lib/toastService";
 
 const statusStyles: Record<string, string> = {
   delivered: "bg-emerald-100 text-emerald-700",
@@ -15,80 +15,98 @@ const statusStyles: Record<string, string> = {
   cancelled: "bg-gray-100 text-gray-700",
 };
 
+interface StatCardData {
+  id: string;
+  label: string;
+  value: string | number;
+  delta: string;
+}
+
 export default function AdminDashboard() {
+  const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
+  const [shipments, setShipments] = useState<Shipment[]>([]);
+  const [isLoadingMetrics, setIsLoadingMetrics] = useState(true);
+  const [isLoadingShipments, setIsLoadingShipments] = useState(true);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      setIsLoadingMetrics(true);
+      const metricsData = await adminService.getDashboardMetrics();
+      setMetrics(metricsData);
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to load dashboard metrics";
+      toastService.error(errorMessage);
+      console.error(error);
+    } finally {
+      setIsLoadingMetrics(false);
+    }
+  };
+
+  const fetchShipments = async () => {
+    try {
+      setIsLoadingShipments(true);
+      const response = await shipmentService.getShipments(1, 5);
+      setShipments(response.data);
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to load shipments";
+      toastService.error(errorMessage);
+      console.error(error);
+    } finally {
+      setIsLoadingShipments(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchShipments();
+  }, []);
+
+  const statCards: StatCardData[] = metrics
+    ? [
+        {
+          id: "1",
+          label: "Total Admins",
+          value: metrics.totalAdmins,
+          delta: "+2 this month",
+        },
+        {
+          id: "2",
+          label: "Total Shipments",
+          value: metrics.totalShipments,
+          delta: "+12 this month",
+        },
+        {
+          id: "3",
+          label: "Active Shipments",
+          value: metrics.activeShipments,
+          delta: "-3 from last week",
+        },
+      ]
+    : [];
+
   return (
     <AdminLayout title="Admin Dashboard">
       <div className="space-y-6">
         {/* Stat Cards */}
         <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 xl:grid-cols-3">
-          {adminStats.map((stat) => (
-            <StatCard
-              key={stat.id}
-              label={stat.label}
-              value={stat.value}
-              delta={stat.delta}
-            />
-          ))}
+          {isLoadingMetrics ? (
+            <SkeletonLoader count={3} />
+          ) : (
+            statCards.map((stat) => (
+              <StatCard
+                key={stat.id}
+                label={stat.label}
+                value={stat.value}
+                delta={stat.delta}
+              />
+            ))
+          )}
         </div>
-
-        {/* Recent Users */}
-        <section className="bg-white rounded-xl border border-gray-200 shadow-sm">
-          <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-100">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Recent Users
-            </h2>
-            <button className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
-              View All
-            </button>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="text-left text-gray-500">
-                <tr className="border-b border-gray-100">
-                  <th className="px-4 sm:px-6 py-3 font-medium">Name</th>
-                  <th className="px-4 sm:px-6 py-3 font-medium hidden md:table-cell">
-                    Email
-                  </th>
-                  <th className="px-4 sm:px-6 py-3 font-medium">Role</th>
-                  <th className="px-4 sm:px-6 py-3 font-medium hidden lg:table-cell">
-                    Joined
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentUsers.map((user) => (
-                  <tr
-                    key={user.id}
-                    className="border-b border-gray-100 last:border-0"
-                  >
-                    <td className="px-4 sm:px-6 py-4 font-medium text-gray-900">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-semibold">
-                          {user.name
-                            .split(" ")
-                            .map((part) => part[0])
-                            .join("")}
-                        </div>
-                        {user.name}
-                      </div>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 text-gray-600 hidden md:table-cell">
-                      {user.email}
-                    </td>
-                    <td className="px-4 sm:px-6 py-4">
-                      <span className="px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-medium">
-                        {user.role}
-                      </span>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 text-gray-600 hidden lg:table-cell">
-                      {user.joined}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
 
         {/* Recent Shipments */}
         <section className="bg-white rounded-xl border border-gray-200 shadow-sm">
@@ -109,60 +127,70 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="text-left text-gray-500">
-                <tr className="border-b border-gray-100">
-                  <th className="px-4 sm:px-6 py-3 font-medium">
-                    Tracking Number
-                  </th>
-                  <th className="px-4 sm:px-6 py-3 font-medium">Customer</th>
-                  <th className="px-4 sm:px-6 py-3 font-medium">Status</th>
-                  <th className="px-4 sm:px-6 py-3 font-medium hidden md:table-cell">
-                    Origin
-                  </th>
-                  <th className="px-4 sm:px-6 py-3 font-medium hidden lg:table-cell">
-                    Destination
-                  </th>
-                  <th className="px-4 sm:px-6 py-3 font-medium">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentShipments.map((shipment) => (
-                  <tr
-                    key={shipment.id}
-                    className="border-b border-gray-100 last:border-0"
-                  >
-                    <td className="px-4 sm:px-6 py-4 font-medium text-gray-900">
-                      {shipment.trackingNumber}
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 text-gray-600">
-                      {shipment.customer}
-                    </td>
-                    <td className="px-4 sm:px-6 py-4">
-                      <span
-                        className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-                          statusStyles[shipment.status] ??
-                          "bg-gray-100 text-gray-700"
-                        }`}
-                      >
-                        {shipment.status.replace(/_/g, " ")}
-                      </span>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 text-gray-600 hidden md:table-cell">
-                      {shipment.origin}
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 text-gray-600 hidden lg:table-cell">
-                      {shipment.destination}
-                    </td>
-                    <td className="px-4 sm:px-6 py-4">
-                      <button className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
-                        View
-                      </button>
-                    </td>
+            {isLoadingShipments ? (
+              <div className="p-6">
+                <SkeletonLoader count={5} />
+              </div>
+            ) : shipments.length > 0 ? (
+              <table className="w-full text-sm">
+                <thead className="text-left text-gray-500">
+                  <tr className="border-b border-gray-100">
+                    <th className="px-4 sm:px-6 py-3 font-medium">
+                      Tracking Number
+                    </th>
+                    <th className="px-4 sm:px-6 py-3 font-medium">Customer</th>
+                    <th className="px-4 sm:px-6 py-3 font-medium">Status</th>
+                    <th className="px-4 sm:px-6 py-3 font-medium hidden md:table-cell">
+                      Origin
+                    </th>
+                    <th className="px-4 sm:px-6 py-3 font-medium hidden lg:table-cell">
+                      Destination
+                    </th>
+                    <th className="px-4 sm:px-6 py-3 font-medium">Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {shipments.map((shipment) => (
+                    <tr
+                      key={shipment._id || shipment.id}
+                      className="border-b border-gray-100 last:border-0"
+                    >
+                      <td className="px-4 sm:px-6 py-4 font-medium text-gray-900">
+                        {shipment.trackingNumber}
+                      </td>
+                      <td className="px-4 sm:px-6 py-4 text-gray-600">
+                        {shipment.customer}
+                      </td>
+                      <td className="px-4 sm:px-6 py-4">
+                        <span
+                          className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+                            statusStyles[shipment.status] ??
+                            "bg-gray-100 text-gray-700"
+                          }`}
+                        >
+                          {shipment.status.replace(/_/g, " ")}
+                        </span>
+                      </td>
+                      <td className="px-4 sm:px-6 py-4 text-gray-600 hidden md:table-cell">
+                        {shipment.origin}
+                      </td>
+                      <td className="px-4 sm:px-6 py-4 text-gray-600 hidden lg:table-cell">
+                        {shipment.destination}
+                      </td>
+                      <td className="px-4 sm:px-6 py-4">
+                        <button className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="p-6 text-center text-gray-500">
+                No shipments found
+              </div>
+            )}
           </div>
         </section>
       </div>

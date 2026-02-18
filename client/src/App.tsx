@@ -7,22 +7,59 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminUsers from "./pages/AdminUsers";
 import AdminShipments from "./pages/AdminShipments";
 import AdminReports from "./pages/AdminReports";
+import { AuthProvider } from "./context/AuthContext";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { ToastContainer } from "./components/ToastContainer";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import "./App.css";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/admin/users" element={<AdminUsers />} />
-        <Route path="/admin/shipments" element={<AdminShipments />} />
-        <Route path="/admin/reports" element={<AdminReports />} />
-      </Routes>
-    </Router>
+    <ErrorBoundary>
+      <AuthProvider>
+        <Router>
+          <ToastContainer />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/admin-dashboard"
+              element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin-users"
+              element={
+                <ProtectedRoute>
+                  <AdminUsers />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin-shipments"
+              element={
+                <ProtectedRoute>
+                  <AdminShipments />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin-reports"
+              element={
+                <ProtectedRoute>
+                  <AdminReports />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </Router>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 

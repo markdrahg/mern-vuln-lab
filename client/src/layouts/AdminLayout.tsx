@@ -1,6 +1,8 @@
 import { ReactNode, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import { Bell, Menu, Search, X } from "lucide-react";
+import { useAuth } from "../hooks/useAuth";
+import { Bell, Menu, Search, X, LogOut } from "lucide-react";
 
 interface AdminLayoutProps {
   title: string;
@@ -9,6 +11,22 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ title, children }: AdminLayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/admin-login");
+  };
+
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((part) => part[0])
+      .join("")
+      .toUpperCase();
+  };
 
   return (
     <div className="h-screen bg-gray-50">
@@ -69,8 +87,34 @@ export default function AdminLayout({ title, children }: AdminLayoutProps) {
                 <button className="p-2 rounded-lg hover:bg-gray-100">
                   <Bell className="h-5 w-5 text-gray-500" />
                 </button>
-                <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-semibold">
-                  AD
+                <div className="relative">
+                  <button
+                    onClick={() => setProfileOpen(!profileOpen)}
+                    className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-semibold hover:bg-indigo-700 transition"
+                  >
+                    {user ? getInitials(user.name) : "AD"}
+                  </button>
+
+                  {profileOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+                      <div className="px-4 py-3 border-b border-gray-100">
+                        <p className="text-sm font-medium text-gray-900">
+                          {user?.name || "Admin"}
+                        </p>
+                        <p className="text-xs text-gray-500">{user?.email}</p>
+                        <p className="text-xs text-gray-500 capitalize mt-1">
+                          {user?.role.replace(/_/g, " ")}
+                        </p>
+                      </div>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Logout
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

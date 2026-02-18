@@ -2,10 +2,10 @@ import { LayoutGrid, Users, Package, BarChart3, LogOut } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
-  { label: "Dashboard", icon: LayoutGrid, href: "/admin" },
-  { label: "Manage Users", icon: Users, href: "/admin/users" },
-  { label: "Manage Shipments", icon: Package, href: "/admin/shipments" },
-  { label: "Reports", icon: BarChart3, href: "/admin/reports" },
+  { label: "Dashboard", icon: LayoutGrid, href: "/admin-dashboard" },
+  { label: "Manage Users", icon: Users, href: "/admin-users" },
+  { label: "Manage Shipments", icon: Package, href: "/admin-shipments" },
+  { label: "Reports", icon: BarChart3, href: "/admin-reports" },
 ];
 
 interface SidebarProps {
